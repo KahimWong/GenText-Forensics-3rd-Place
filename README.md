@@ -1,5 +1,3 @@
-<div align="center">
-
 # SEED
 
 **S**imple ViT and **E**volving Harness for **E**xplainable Text Forgery **D**etection
@@ -8,8 +6,6 @@
 [![Venue](https://img.shields.io/badge/Venue-ACM_MM_2026-blue)](https://2026.acmmm.org/)
 [![Rank](https://img.shields.io/badge/Rank-3rd_🥉-brightgreen)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)](./LICENSE)
-
-</div>
 
 ---
 
