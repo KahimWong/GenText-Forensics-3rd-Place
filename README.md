@@ -82,9 +82,6 @@ SEED is a **modular forgery analysis pipeline** with three stages:
 │   ├── report_utils.py                 # 📋 Report formatting utilities
 │   ├── template_report_boxreasons_coordspanrepair.py
 │   └── config.yaml                     # 🔑 LLM API configuration
-├── _MM_26_Challenge__GenText_Forensics_3rd_Place/
-│   ├── sigconf.tex                     # 📜 Challenge paper source
-│   └── fig/seed_overview.png           # 🖼️  Method overview figure
 └── TDOC/                               # 🧪 Auxiliary training & generation modules
 ```
 
