@@ -1,0 +1,46 @@
+dataset:
+  data_root: ./data
+  num_search: 50
+  num_train: 0
+  num_val: 50
+  num_test: 0
+  seed: 42
+
+inner_loop:
+  mode: offline
+  num_epochs: 1
+  batch_size: 1
+  max_workers: 4
+  seed: 42
+  temperature: 0.0
+  max_tokens: 2048
+  overlay_dir: logs/overlays
+  eval_with_llm_judge: true
+  bertscore_rescale_with_baseline: true
+
+models:
+  base:
+    model: qwen3.5-flash
+    api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key_env: LINKAPI_API_KEY
+  judge:
+    model: gpt-4o-mini
+    api_base: https://linkapi.ai/v1
+    api_key_env: LINKAPI_API_KEY
+  proposer:
+    model: gpt-5.5
+    api_base: https://linkapi.ai/v1
+    api_key_env: LINKAPI_API_KEY
+
+meta_harness:
+  iterations: 30
+  candidates_per_iteration: 2
+  run_name: default_v3
+
+harnesses:
+  baselines:
+    # - fewshot_overlay
+    # - direct_overlay
+    # - template_report
+    - template_report_boxreasons_coordspanrepair
+  proposed: []
