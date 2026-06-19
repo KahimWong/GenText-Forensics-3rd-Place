@@ -7,6 +7,7 @@
 [![Rank](https://img.shields.io/badge/Rank-3rd_🥉-brightgreen)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)](./LICENSE)
 
+
 ---
 
 > 🏆 **3rd Place Solution** for the ACM MM 2026 GenText-Forensics Challenge — detecting, localizing, and explaining text-centric document forgeries.
@@ -27,58 +28,30 @@ SEED is a **modular forgery analysis pipeline** with three stages:
   <img src="fig/seed_overview.png" alt="SEED overview" width="95%">
 </p>
 
-## ✨ Highlights
 
-<table>
-<tr>
-  <td>🧊 <b>Frozen Backbone</b></td>
-  <td>DINOv3 ViT-L/16 preserves transferable visual priors — only low-rank LoRA residuals are trained</td>
-</tr>
-<tr>
-  <td>🔗 <b>Unified Heads</b></td>
-  <td>Single backbone produces both image-level forgery probability and pixel-level localization mask</td>
-</tr>
-<tr>
-  <td>👥 <b>Paired Training</b></td>
-  <td>Matched (clean, forged) pairs in each batch force the model to contrast authentic vs. manipulated content</td>
-</tr>
-<tr>
-  <td>🪶 <b>Minimal Parameters</b></td>
-  <td>LoRA rank-1 adaptation — extremely few trainable parameters while retaining strong performance</td>
-</tr>
-<tr>
-  <td>🤖 <b>Auto-Evolving Harness</b></td>
-  <td>Proposer-evaluator loop auto-discovers effective prompts without manual prompt engineering</td>
-</tr>
-<tr>
-  <td>🧹 <b>Clean Release</b></td>
-  <td>Sanitized of hardcoded paths, API keys, and unused legacy code (DCT, multi-expert, gradient checkpointing)</td>
-</tr>
-</table>
-
-## 📂 Repository Layout
+## Repository Layout
 
 ```text
 .
-├── base_trainer.py                     # 🏋️ Training utilities & metrics
-├── cfg.py                              # ⚙️  Runtime configuration
-├── ds.py                               # 📦 Datasets & dataloaders
-├── main.py                             # 🚂 Train / validation / inference entry point
+├── base_trainer.py                     # Training utilities & metrics
+├── cfg.py                              # Runtime configuration
+├── ds.py                               # Datasets & dataloaders
+├── main.py                             # Train / validation / inference entry point
 ├── model/
-│   ├── eomt_sep_query.py               # 🧠 Main detector (DINOv3 + LoRA + EoMT)
-│   ├── lora.py                         # 🪶 Single-expert LoRA modules
-│   ├── mask_classification_loss.py     # 🎯 Mask2Former-style loss
-│   └── scale_block.py                  # ↗️  ConvTranspose upscaling block
+│   ├── eomt_sep_query.py               # Main detector (DINOv3 + LoRA + EoMT)
+│   ├── lora.py                         # Single-expert LoRA modules
+│   ├── mask_classification_loss.py     # Mask2Former-style loss
+│   └── scale_block.py                  # ConvTranspose upscaling block
 ├── meta_harness/
-│   ├── test_submission.py              # 📝 Generate challenge-format reports
+│   ├── test_submission.py              # Generate challenge-format reports
 │   ├── precompute_submission_artifacts.py
-│   ├── harness.py                      # 🔧 Report generation base class
-│   ├── llm_clients.py                  # 🌐 OpenAI-compatible LLM client
-│   ├── overlay.py                      # 🖼️  Mask visualization helpers
-│   ├── report_utils.py                 # 📋 Report formatting utilities
+│   ├── harness.py                      # Report generation base class
+│   ├── llm_clients.py                  # OpenAI-compatible LLM client
+│   ├── overlay.py                      # Mask visualization helpers
+│   ├── report_utils.py                 # Report formatting utilities
 │   ├── template_report_boxreasons_coordspanrepair.py
-│   └── config.yaml                     # 🔑 LLM API configuration
-└── TDOC/                               # 🧪 Auxiliary training & generation modules
+│   └── config.yaml                     # LLM API configuration
+└── TDOC/                               # Auxiliary training & generation modules
 ```
 
 ## ⚙️ Environment Setup
@@ -88,29 +61,15 @@ SEED is a **modular forgery analysis pipeline** with three stages:
 pip install -r requirements.txt
 ```
 
-| Package | Purpose |
-|---------|---------|
-| `torch`, `torchvision` | Deep learning framework |
-| `timm`, `transformers` | ViT backbone & HuggingFace hub |
-| `albumentations` | Image augmentations |
-| `opencv-python`, `Pillow` | Image I/O & processing |
-| `lmdb`, `six` | DocTamper LMDB loading |
-| `openai` | MLLM client for report generation |
-
 ## 📊 Data Preparation
 
-Edit `cfg.py` to configure dataset paths — all values are **intentionally empty** by default for the open-source release.
+| Dataset | Description | Link |
+|---------|-------------|------|
+| RealText-V2 | Original challenge dataset | [vankey/RealText-V2](https://huggingface.co/datasets/vankey/RealText-V2) |
+| RealText-V2-Syn25k | Our synthetic data | [mps-lab/RealText-V2-Syn25k](https://huggingface.co/datasets/mps-lab/RealText-V2-Syn25k) |
+| Cross-domain test sets | T-SROIE, OSTF, TPIC-13, RTM | [Google Drive](https://drive.google.com/drive/folders/1xn8mELN8etQwRo_PgS5XV6XTKCZasz_A?usp=drive_link) |
+| Model Checkpoint | SEED (LoRA rank-1, DINOv3 ViT-L) | [mps-lab/SEED](https://huggingface.co/mps-lab/SEED) |
 
-| Config Key | Description |
-|------------|-------------|
-| `mode` | `train` / `val` / `infer_path_eval` |
-| `ckpt` | Path to pretrained checkpoint (`.pth`) |
-| `realtextv2_data_root` | Root for RealText-V2 training data |
-| `data_root` | DocTamper LMDB root for validation |
-| `path_pkl_dir` | Evaluation path-pkl directory |
-| `forg_type_dir` | Forgery-type metadata directory |
-| `infer_path_eval_pkl` | Image-list pickle for batch inference |
-| `infer_path_eval_save_dir` | Output directory for saved predictions |
 
 ## 🚀 Training
 
@@ -120,7 +79,6 @@ Edit `cfg.py` to configure dataset paths — all values are **intentionally empt
 python main.py
 ```
 
-> 💡 Training uses `PairedMixedRealTextV2TrainDs` — each batch contains matched (clean, forged) pairs to enforce contrastive learning of manipulation traces.
 
 ## 📈 Evaluation
 
@@ -129,23 +87,6 @@ python main.py
 python main.py
 ```
 
-Reports the following per-dataset:
-
-| Metric | Description |
-|--------|-------------|
-| 🎯 **Loc F1** | Per-image F1 averaged across all samples |
-| 🏷️ **Det Acc** | Image-level binary accuracy (authentic vs. forged) |
-| 🏷️ **Det F1** | Image-level detection F1 |
-
-## 🔮 Batch Inference
-
-```bash
-# 1. Edit cfg.py → mode='infer_path_eval'
-# 2. Set infer_path_eval_pkl and infer_path_eval_save_dir
-python main.py
-```
-
-> 💾 Saves predicted forgery probability maps for every image listed in the pickle file.
 
 ## 📝 Report Generation
 
@@ -161,7 +102,5 @@ python meta_harness/precompute_submission_artifacts.py
 # 📝 Step 2: Generate reports via MLLM
 python meta_harness/test_submission.py
 ```
-
-> 🤖 This stage is fully automated — no manual prompt engineering required.
 
 

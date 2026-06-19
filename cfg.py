@@ -5,17 +5,17 @@ hf_cache_root = op.expanduser('~/.cache/huggingface')
 hf_hub_cache = op.join(hf_cache_root, 'hub')
 hf_transformers_cache = op.join(hf_cache_root, 'transformers')
 
-gpus = '4,5'
+gpus = '0,1,2,3,4,5'
 device_n = len(gpus.split(','))
 mode = 'val'  # 'train', 'val', 'infer_path_eval'
-eval_mode = ['loc']
+eval_mode = ['loc', 'det']
 check_val = False
 skip_val = True
 
 # ------------------ MODEL CFG -------------------
 ckpt = ''  # path to pretrained checkpoint (.pth)
 finetune_mode = 'lora'
-lora_rank = 32
+lora_rank = 1
 moeffort_target_keywords = ("attention", "mlp")
 num_q = 1
 img_cls_loss_weight = 1.0
@@ -24,6 +24,7 @@ img_cls_loss_weight = 1.0
 data_root = ''  # path to DocTamperV1 dataset
 forg_type_dir = ''  # path to tampering_types directory
 path_pkl_dir = ''  # path to eval path-pkl directory
+det_path_pkl_dir = ''  # path to detection eval path-pkl directory
 exp_out_dir = './exp_out'
 
 infer_path_eval_pkl = ""  # path to test_image_path_list.pkl
@@ -41,8 +42,11 @@ realtextv2_train_crop_aug = A.CropNonEmptyMaskIfExists(
 )
 
 all_ds_name = ['T-SROIE_test', 'Tampered-IC13_test', 'RealTextManipulation_test', 'OSTF_test']
-val_name_list = all_ds_name
+val_name_list = ['T-SROIE_test_sample', 'Tampered-IC13_test_sample', 'RealTextManipulation_test_sample', 'OSTF_test_sample']
 val_sample_n = 1000
+
+# ------------------- HUGGING FACE -------------------
+hf_repo_id = ''  # Hugging Face repo for SEED model, e.g. 'mps-lab/SEED'
 
 # ------------------- TRAINING -------------------
 train_bs = 4

@@ -6,10 +6,10 @@ import re
 from pathlib import Path
 from typing import Any
 
-from FIE_harness.harness import ForgeryReportHarness
-from FIE_harness.llm_clients import image_to_data_url
-from FIE_harness.overlay import connected_component_boxes, load_binary_mask, render_red_box_overlay
-from FIE_harness.report_utils import build_authentic_report, build_forged_report
+from meta_harness.harness import ForgeryReportHarness
+from meta_harness.llm_clients import image_to_data_url
+from meta_harness.overlay import connected_component_boxes, load_binary_mask, render_red_box_overlay
+from meta_harness.report_utils import build_authentic_report, build_forged_report
 
 
 class TemplateReportBoxreasonsCoordspanrepair(ForgeryReportHarness):

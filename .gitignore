@@ -40,3 +40,7 @@ Thumbs.db
 
 # Paper assets / local artifacts
 _MM_26_Challenge__GenText_Forensics_3rd_Place/
+
+# Experiment outputs & HF model cache
+exp_out/
+hf_model_out/

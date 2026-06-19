@@ -183,7 +183,7 @@ def _get_docpro_path_pkl_dir(eval_mode=None):
     if eval_mode == "loc":
         return cfg.path_pkl_dir
     if eval_mode == "det":
-        return DOC_PRO_DET_PATH_PKL_DIR
+        return getattr(cfg, "det_path_pkl_dir", cfg.path_pkl_dir)
     raise ValueError(f"Unsupported cfg.eval_mode: {eval_mode}")
 
 

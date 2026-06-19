@@ -71,29 +71,34 @@ class Trainer(BaseTrainer):
     def __init__(self, rank, world_size):
         super(Trainer, self).__init__(rank, world_size)
 
-        # data loader
-        self.train_dl = get_train_dl(self.world_size, self.rank)
+        # data loader — train dl only needed for training
+        self.train_dl = get_train_dl(self.world_size, self.rank) if cfg.mode == "train" else None
         self.val_dls_map = {
             "loc": get_val_dl(self.world_size, self.rank, eval_mode="loc"),
             "det": get_val_dl(self.world_size, self.rank, eval_mode="det"),
         }
  
-        # model
-        self.model = EoMT().to(device=f"cuda:{self.rank}")
-        self.load_ckpt(cfg.ckpt)
+        # model — use HF wrapper for validation
+        from model.hf_wrapper import EoMTForTamperingDetection
+
+        self.model = EoMTForTamperingDetection().to(device=f"cuda:{self.rank}")
+        self.model.load_state_dict_from_ckpt(cfg.ckpt)
         self.model = DDP(
             self.model, device_ids=[self.rank], find_unused_parameters=False
         )
 
-        # optimizer and scheduler
+        # optimizer and scheduler (only needed for training)
         self.optimizer = AdamW(
             (p for p in self.model.parameters() if p.requires_grad),
             lr=cfg.lr,
             weight_decay=cfg.weight_decay,
         )
-        self.scheduler = CosineAnnealingLR(
-            self.optimizer, len(self.train_dl) * cfg.epochs, eta_min=cfg.min_lr
-        )
+        if self.train_dl is not None:
+            self.scheduler = CosineAnnealingLR(
+                self.optimizer, len(self.train_dl) * cfg.epochs, eta_min=cfg.min_lr
+            )
+        else:
+            self.scheduler = None
 
         # loss
         self.criterion = MaskClassificationLoss().to(f"cuda:{self.rank}")
@@ -525,6 +530,7 @@ class Trainer(BaseTrainer):
             image_paths=image_paths,
             save_dir=str(save_dir),
             patch_batch_size=int(cfg.infer_path_eval_patch_batch_size),
+            expert_idx=getattr(cfg, "infer_path_eval_expert_idx", None),
             output_names=output_names,
         )
         dist.barrier()
@@ -892,6 +898,7 @@ class Trainer(BaseTrainer):
         if self.rank == 0:
             for ds_name, f1_val in per_ds_stats.items():
                 logging.info(f"Val {ds_name} F1: {f1_val:.4f}")
+                print(f"  [loc] {ds_name:<35s}  F1 = {f1_val:.4f}", flush=True)
 
         avg_f1 = sum(per_ds_stats.values()) / len(per_ds_stats)
         self.model.train()
@@ -975,6 +982,8 @@ class Trainer(BaseTrainer):
                     f"tp: {stats['tp']} | fp: {stats['fp']} | "
                     f"tn: {stats['tn']} | fn: {stats['fn']}"
                 )
+                print(f"  [det] {ds_name:<35s}  F1 = {stats['image_f1']:.4f}  "
+                      f"acc={stats['image_acc']:.4f}  prec={stats['image_precision']:.4f}  rec={stats['image_recall']:.4f}", flush=True)
 
         avg_image_f1 = sum(
             stats["image_f1"] for stats in per_ds_reduced.values()
