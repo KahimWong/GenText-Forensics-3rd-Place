@@ -240,7 +240,7 @@ class EoMTForTamperingDetection(EoMT):
         Parameters
         ----------
         repo_id : str
-            Hugging Face repo id, e.g. "mps-lab/SEED".
+            Hugging Face repo id, e.g. "your-username/RealText-EoMT".
         save_directory : str, optional
             Local directory to save to before pushing. If None, a
             temporary directory is used.

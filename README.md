@@ -66,9 +66,9 @@ pip install -r requirements.txt
 | Dataset | Description | Link |
 |---------|-------------|------|
 | RealText-V2 | Original challenge dataset | [vankey/RealText-V2](https://huggingface.co/datasets/vankey/RealText-V2) |
-| RealText-V2-Syn25k | Our synthetic data | [mps-lab/RealText-V2-Syn25k](https://huggingface.co/datasets/mps-lab/RealText-V2-Syn25k) |
+| RealText-V2-Syn25k | Our synthetic data | [Jason37437/RealText-V2-Syn25k](https://huggingface.co/datasets/Jason37437/RealText-V2-Syn25k) |
 | Cross-domain test sets | T-SROIE, OSTF, TPIC-13, RTM | [Google Drive](https://drive.google.com/drive/folders/1xn8mELN8etQwRo_PgS5XV6XTKCZasz_A?usp=drive_link) |
-| Model Checkpoint | SEED (LoRA rank-1, DINOv3 ViT-L) | [mps-lab/SEED](https://huggingface.co/mps-lab/SEED) |
+| Model Checkpoint | SEED (LoRA rank-1, DINOv3 ViT-L) | [Jason37437/SEED](https://huggingface.co/Jason37437/SEED) / [Google Drive](https://drive.google.com/file/d/1XRbcE2eEdSBdQbyiImg5w9Dn5oMRMKhv/view?usp=drive_link)  |
 
 
 ## 🚀 Training
